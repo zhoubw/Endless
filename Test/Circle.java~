@@ -1,0 +1,87 @@
+import java.io.*;
+import java.util.*;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+public class Circle extends JPanel implements MouseListener, MouseMotionListener {
+    protected int x_cor;
+    protected int y_cor;
+    protected Color c;
+    protected int radius = 0;	
+    protected int dr = 1; //the rate of change of the radius; probably keep this at 1 but idk; there's no way to make it smaller	
+    protected long spawntime; //the system spawn time of the circle in milliseconds	
+    protected int lifespan = 1; //the maximum life of the circle in seconds; might make it a long	
+    protected ArrayList<Circle> Circles = new ArrayList<Circle>(); //Stores circles So they don't disappear
+	
+    public void mousePressed(MouseEvent e) {
+    }
+    /*
+    public void mouseReleased(MouseEvent e) {
+	long time = System.currentTimeMillis();
+	Circles.add(new Circle(e.getX(), e.getY(), Color.yellow, time));
+	repaint();
+	}
+    */
+    public void mouseReleased(MouseEvent e) {
+	
+    }
+    public void mouseEntered(MouseEvent e) {
+	
+    }
+    public void mouseExited(MouseEvent e) {
+	
+    }
+    public void mouseClicked(MouseEvent e) {
+	
+    }
+    public void mouseMoved(MouseEvent e) {
+
+    }
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    public Circle() {
+	this.setVisible(true);
+	this.addMouseListener(this);
+	this.addMouseMotionListener(this);
+    }
+	
+    public Circle (int x_cor, int y_cor, int radius, Color c, long spawntime) {
+	this.x_cor = x_cor;
+	this.y_cor = y_cor;
+	this.c = c;
+	this.spawntime = spawntime;
+	this.radius = radius;
+	
+	this.setVisible(true);
+	this.addMouseListener(this);
+	this.addMouseMotionListener(this);
+	
+    }
+    
+    public void paintComponent(Graphics g) {
+	super.paintComponent(g);
+	this.setSize(1024, 768);
+	this.setLocation(0,0);
+	this.setBackground(Color.black);
+	
+	//g.drawOval(this.x_cor - radius, this.y_cor - radius, this.radius*2, this.radius*2);
+	for (int i=0; i < Circles.size(); i++) {
+		Circle circ = Circles.get(i);
+		long currenttime = System.currentTimeMillis();
+		if ((Gui.inittime + circ.spawntime) == currenttime && //find a way to call the inittime
+		     (currenttime - circ.spawntime) > (long)circ.lifespan * 1000) Circles.remove(circ);
+		else{
+			g.setColor(circ.c);
+			g.drawOval(circ.x_cor - radius, circ.y_cor - radius, circ.radius*2, circ.radius*2);
+			circ.radius += circ.dr;
+			circ.x_cor -= circ.dr;
+			circ.y_cor -= circ.dr;
+		}
+	}
+    }
+
+}
