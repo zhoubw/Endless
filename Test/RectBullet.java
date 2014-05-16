@@ -12,7 +12,7 @@ public class RectBullet extends JPanel {
     private long spawntime;
     private long lifespan;
 
-    protected static int delay = 100;
+    protected static int delay = 1000/100;
 
     public RectBullet() {
 	this.setVisible(true);

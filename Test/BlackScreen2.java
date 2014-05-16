@@ -17,8 +17,10 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
      *
      *
      *****************************************/
-
+    //control bullets
     private ArrayList<RectBullet> RectBullets;
+    private static Timer bulletTimer = new Timer(1000, null);
+    
     //private static int delayTime = 0; //out of 1000
 
     private Timer timer;
@@ -30,7 +32,7 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
     boolean keyUP, keyDOWN, keyLEFT, keyRIGHT, keyX;
     
     //Physics
-    private static int floor = 1024-200; //200
+    private static int floor = 768-200; //200
     private static int gravityPull = 8;
     private static int dg = 0;
     
@@ -75,26 +77,12 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	
     }
     public void mouseMoved(MouseEvent e) {
-	//player.x_cor = e.getX() - (player.getWidth()/2);
-	//player.y_cor = e.getY() - (player.getHeight()/2);
+
     }
     public void mouseDragged(MouseEvent e) {
-	//player.x_cor = e.getX() - (player.getWidth()/2);
-	//player.y_cor = e.getY() - (player.getHeight()/2);
+
     }
     public void keyPressed(KeyEvent e) {
-	/*
-	if (e.getKeyCode() == KeyEvent.VK_X) { 
-	    if (delayTime == 0) RectBullets.add( new RectBullet(player.x_cor + 24, player.y_cor + 18, new Color(0, 0, 255), System.currentTimeMillis(), 10000));
-	    delayTime += RectBullet.delay;
-	    
-	}
-	
-	if (e.getKeyCode() == KeyEvent.VK_LEFT) player.dx -= player.speed;
-	if (e.getKeyCode() == KeyEvent.VK_RIGHT) player.dx += player.speed;
-	if (e.getKeyCode() == KeyEvent.VK_UP) player.dy -= player.speed;
-	if (e.getKeyCode() == KeyEvent.VK_DOWN) player.dy += player.speed; 
-	*/
 	switch (e.getKeyCode()) {
 	case KeyEvent.VK_X: keyX = true; break;
 	case KeyEvent.VK_UP: keyUP = true; break;
@@ -105,15 +93,6 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	
     }
     public void keyReleased(KeyEvent e) {
-	/*
-	if (e.getKeyCode() == KeyEvent.VK_X) {
-	    if (delayTime == 1000) delayTime = 0;
-	}
-	if (e.getKeyCode() == KeyEvent.VK_LEFT) player.dx = 0;
-	if (e.getKeyCode() == KeyEvent.VK_RIGHT) player.dx = 0;
-	if (e.getKeyCode() == KeyEvent.VK_UP) player.dy = 0;
-	if (e.getKeyCode() == KeyEvent.VK_DOWN) player.dy = 0;
-	*/
 	switch (e.getKeyCode()) {
 	case KeyEvent.VK_X: keyX = false; break;
 	case KeyEvent.VK_UP: keyUP = false; break;
@@ -128,10 +107,29 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
     /*********************Interface*********************
     ***************************************************/
 
+    public void shootRectBullet() {
+	RectBullets.add( new RectBullet(player.x_cor + 24, player.y_cor + 18, new Color(0, 0, 255), currentTime, 10000));
+    }
+    
+    private ActionListener ALRectBullet = new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		shootRectBullet();
+	    }
+	};
+    
     public void actionPerformed(ActionEvent e) {
 	repaint();
 	currentTime = System.currentTimeMillis();
-	if (keyX) RectBullets.add( new RectBullet(player.x_cor + 24, player.y_cor + 18, new Color(0, 0, 255), currentTime, 10000));
+	
+	if (keyX) {
+	    bulletTimer.setDelay(RectBullet.delay);
+	    bulletTimer.addActionListener(ALRectBullet);
+	    bulletTimer.start();
+	}
+	if (!keyX) {
+	    bulletTimer.stop();
+	    bulletTimer.removeActionListener(ALRectBullet);
+	}
 	
 	if (!keyUP || !keyDOWN) player.dy = 0;
 	if (!keyLEFT || !keyRIGHT) player.dx = 0;
@@ -149,14 +147,14 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	this.setLocation(0,0);
 	this.setBackground(Color.black);
 
-	//draw player box
+ 	//draw player box
+	
+ 	if (player.y_cor >= floor) {player.y_cor = floor; player.dy = 0;}
+	if (player.y_cor < floor) {player.dy += gravityPull;}
 	g.setColor(player.getColor());
 	g.drawRect(player.x_cor, player.y_cor, player.getWidth(), player.getHeight());
 	player.x_cor += player.dx;
-	//player.y_cor += player.dy;
-	
-	if (player.y_cor > floor) player.y_cor = floor;
-	if (player.y_cor < floor) player.y_cor += gravityPull;
+	player.y_cor += player.dy;
 
 	//passively add bullets
 	//if (System.currentTimeMillis() % 153 == 0) RectBullets.add(new RectBullet(player.x_cor + 24, player.y_cor + 18, new Color(0, 0, 255), System.currentTimeMillis(), 1000));
