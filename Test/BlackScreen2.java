@@ -29,9 +29,14 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
     //Control which keys are pressed
     boolean keyUP, keyDOWN, keyLEFT, keyRIGHT, keyX;
     
+    //Physics
+    private static int floor = 1024-200; //200
+    private static int gravityPull = 8;
+    private static int dg = 0;
+    
 
     //testing with static
-    private static Player player = new Player(100, 100, 3, 18, 36, new Color(255, 0, 0));
+    private static Player player = new Player(100, 100, 6, 18, 36, new Color(255, 0, 0));
     
     //Constructor
     public BlackScreen2() {
@@ -49,6 +54,10 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
     
 	timer.start();
     }
+
+
+    /***************************************************
+     **********************Interface********************/
 
     public void mousePressed(MouseEvent e) {
 
@@ -116,6 +125,8 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
     public void keyTyped(KeyEvent e) {
 	//omit
     }    
+    /*********************Interface*********************
+    ***************************************************/
 
     public void actionPerformed(ActionEvent e) {
 	repaint();
@@ -142,7 +153,10 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	g.setColor(player.getColor());
 	g.drawRect(player.x_cor, player.y_cor, player.getWidth(), player.getHeight());
 	player.x_cor += player.dx;
-	player.y_cor += player.dy;
+	//player.y_cor += player.dy;
+	
+	if (player.y_cor > floor) player.y_cor = floor;
+	if (player.y_cor < floor) player.y_cor += gravityPull;
 
 	//passively add bullets
 	//if (System.currentTimeMillis() % 153 == 0) RectBullets.add(new RectBullet(player.x_cor + 24, player.y_cor + 18, new Color(0, 0, 255), System.currentTimeMillis(), 1000));
@@ -154,7 +168,7 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	    }
 	    else {
 		RectBullets.remove(b);
-
+		System.out.println(RectBullets.size());
 	    }
 	}
 

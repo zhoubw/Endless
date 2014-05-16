@@ -7,8 +7,6 @@ import java.awt.image.*;
 import javax.swing.*;
 import javax.imageio.*;
 
-// This is the basic frame.
-
 /**************************************************
  *
  *  Timer implementation
@@ -21,11 +19,14 @@ public class Gui2 {
     private JPanel panel;
     // private boolean running = true;
     
+    private static int WINDOW_WIDTH = 1024;
+    private static int WINDOW_HEIGHT = 768;
+
     public Gui2() {
 	//inittime = System.currentTimeMillis(); //subject to be moved
         frame = new JFrame("Gui");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1024,768);
+        frame.setSize(WINDOW_WIDTH,WINDOW_HEIGHT);
 
 	frame.setResizable(false);
         frame.setVisible(true);
@@ -39,7 +40,7 @@ public class Gui2 {
         Gui2 g2 = new Gui2();
 	
         BlackScreen2 scrn = new BlackScreen2();
-	g2.frame.add(scrn);	
+	g2.frame.add(scrn);
    }
     
 }
