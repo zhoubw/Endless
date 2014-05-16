@@ -17,13 +17,12 @@ import javax.imageio.*;
 
 public class Gui2 {
     private JFrame frame;
-    private Graphics g;
+    //private Graphics g;
     private JPanel panel;
-    private boolean running = true;
-    protected static long inittime;
+    // private boolean running = true;
     
-    public Gui() {
-	inittime = System.currentTimeMillis(); //subject to be moved
+    public Gui2() {
+	//inittime = System.currentTimeMillis(); //subject to be moved
         frame = new JFrame("Gui");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1024,768);
@@ -37,10 +36,10 @@ public class Gui2 {
     
 
    public static void main(String[] args) {
-        Gui g = new Gui();
+        Gui2 g2 = new Gui2();
 	
-        BlackScreen scrn = new BlackScreen();
-	g.frame.add(scrn);	
+        BlackScreen2 scrn = new BlackScreen2();
+	g2.frame.add(scrn);	
    }
     
 }

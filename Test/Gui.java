@@ -11,7 +11,7 @@ import javax.imageio.*;
 
 public class Gui {
     private JFrame frame;
-    private Graphics g;
+    //    private Graphics g;
     private JPanel panel;
     private boolean running = true;
     protected static long inittime;

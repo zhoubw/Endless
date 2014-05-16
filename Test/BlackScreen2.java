@@ -10,14 +10,45 @@ import java.awt.Color;
 
 public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionListener, KeyListener, ActionListener{	
     
-    private Set<KeyEvent> Keys;
+    //private Set<KeyEvent> Keys;
+    
+    /*****************************************
+     * Timer Implementation
+     *
+     *
+     *****************************************/
 
     private ArrayList<RectBullet> RectBullets;
     //private static int delayTime = 0; //out of 1000
-    private static Timer timer = new Timer(33, this);
+
+    private Timer timer;
+    private int fps = 1000 / 50; //the 50 is the actual fps
+    private long initTime;
+    private long currentTime;
+    
+    //Control which keys are pressed
+    boolean keyUP, keyDOWN, keyLEFT, keyRIGHT, keyX;
     
 
+    //testing with static
     private static Player player = new Player(100, 100, 3, 18, 36, new Color(255, 0, 0));
+    
+    //Constructor
+    public BlackScreen2() {
+	timer = new Timer(fps, this);
+	initTime = System.currentTimeMillis();
+	currentTime = System.currentTimeMillis();
+
+	//Keys = new HashSet<KeyEvent>();
+	RectBullets = new ArrayList<RectBullet>();
+
+	addMouseListener(this);
+	addMouseMotionListener(this);
+       	setFocusable(true);
+       	addKeyListener(this);
+    
+	timer.start();
+    }
 
     public void mousePressed(MouseEvent e) {
 
@@ -55,21 +86,14 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	if (e.getKeyCode() == KeyEvent.VK_UP) player.dy -= player.speed;
 	if (e.getKeyCode() == KeyEvent.VK_DOWN) player.dy += player.speed; 
 	*/
-	if (e.getKeyCode() == KeyEvent.VK_X) Keys.add(e);
-	if (e.getKeyCode() == KeyEvent.VK_LEFT) Keys.add(e);
-	if (e.getKeyCode() == KeyEvent.VK_RIGHT) Keys.add(e);
-	if (e.getKeyCode() == KeyEvent.VK_UP) Keys.add(e);
-	if (e.getKeyCode() == KeyEvent.VK_DOWN) Keys.add(e);
-	
-	//iterate over multiple keys
-	for (KeyEvent ke : Keys) {
-	    if (ke.getKeyCode() == KeyEvent.VK_X) RectBullets.add( new RectBullet(player.x_cor + 24, player.y_cor + 18, new Color(0, 0, 255), System.currentTimeMillis(), 10000));
-	    if (ke.getKeyCode() == KeyEvent.VK_LEFT) player.dx -= player.speed;
-	    if (ke.getKeyCode() == KeyEvent.VK_RIGHT) player.dx += player.speed;
-	    if (ke.getKeyCode() == KeyEvent.VK_UP) player.dy -= player.speed;
-	    if (ke.getKeyCode() == KeyEvent.VK_DOWN) player.dy += player.speed;
-
+	switch (e.getKeyCode()) {
+	case KeyEvent.VK_X: keyX = true; break;
+	case KeyEvent.VK_UP: keyUP = true; break;
+	case KeyEvent.VK_DOWN: keyDOWN = true; break;
+	case KeyEvent.VK_LEFT: keyLEFT = true; break;
+	case KeyEvent.VK_RIGHT: keyRIGHT = true; break;
 	}
+	
     }
     public void keyReleased(KeyEvent e) {
 	/*
@@ -81,30 +105,30 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	if (e.getKeyCode() == KeyEvent.VK_UP) player.dy = 0;
 	if (e.getKeyCode() == KeyEvent.VK_DOWN) player.dy = 0;
 	*/
-	if (e.getKeyCode() == KeyEvent.VK_X) Keys.remove(e);
-	if (e.getKeyCode() == KeyEvent.VK_LEFT) {player.dx = 0; Keys.remove(e);}
-	if (e.getKeyCode() == KeyEvent.VK_RIGHT) {player.dx = 0; Keys.remove(e);}
-	if (e.getKeyCode() == KeyEvent.VK_UP) {player.dy = 0; Keys.remove(e);}
-	if (e.getKeyCode() == KeyEvent.VK_DOWN) {player.dy = 0; Keys.remove(e);}
+	switch (e.getKeyCode()) {
+	case KeyEvent.VK_X: keyX = false; break;
+	case KeyEvent.VK_UP: keyUP = false; break;
+	case KeyEvent.VK_DOWN: keyDOWN = false; break;
+	case KeyEvent.VK_LEFT: keyLEFT = false; break;
+	case KeyEvent.VK_RIGHT: keyRIGHT = false; break;
 	}
+    }
     public void keyTyped(KeyEvent e) {
 	//omit
-    }
-    
-    
-    //Constructor
-    public BlackScreen() {
-	Keys = new HashSet<KeyEvent>();
-	RectBullets = new ArrayList<RectBullet>();
-	addMouseListener(this);
-	addMouseMotionListener(this);
-       	setFocusable(true);
-       	addKeyListener(this);
-    }
-    
+    }    
 
     public void actionPerformed(ActionEvent e) {
+	repaint();
+	currentTime = System.currentTimeMillis();
+	if (keyX) RectBullets.add( new RectBullet(player.x_cor + 24, player.y_cor + 18, new Color(0, 0, 255), currentTime, 10000));
 	
+	if (!keyUP || !keyDOWN) player.dy = 0;
+	if (!keyLEFT || !keyRIGHT) player.dx = 0;
+	if (keyUP) player.dy -= player.speed;
+	if (keyDOWN) player.dy += player.speed;
+	if (keyLEFT) player.dx -= player.speed;
+	if (keyRIGHT) player.dx += player.speed;
+
     }
 
     //this needs to be done per frame
@@ -125,8 +149,7 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 
 	//draw bullet box
 	for (RectBullet b: RectBullets) {
-	    long currenttime = System.currentTimeMillis();
-	    if ( (currenttime - b.getSpawntime()) < b.getLifespan() ) { //valid
+	    if ( (currentTime - b.getSpawntime()) < b.getLifespan() ) { //valid
 		b.spawn(g);
 	    }
 	    else {
