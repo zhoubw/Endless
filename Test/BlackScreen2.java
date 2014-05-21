@@ -18,7 +18,7 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
      *
      *****************************************/
     //control bullets
-    private ArrayList<RectBullet> RectBullets;
+    private LinkedList<RectBullet> RectBullets;
     private static Timer bulletTimer = new Timer(1000, null);
     
     //private static int delayTime = 0; //out of 1000
@@ -47,7 +47,7 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	currentTime = System.currentTimeMillis();
 
 	//Keys = new HashSet<KeyEvent>();
-	RectBullets = new ArrayList<RectBullet>();
+	RectBullets = new LinkedList<RectBullet>();
 
 	addMouseListener(this);
 	addMouseMotionListener(this);
@@ -160,6 +160,7 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	//if (System.currentTimeMillis() % 153 == 0) RectBullets.add(new RectBullet(player.x_cor + 24, player.y_cor + 18, new Color(0, 0, 255), System.currentTimeMillis(), 1000));
 
 	//draw bullet box
+	/*
 	for (RectBullet b: RectBullets) {
 	    if ( (currentTime - b.getSpawntime()) < b.getLifespan() ) { //valid
 		b.spawn(g);
@@ -167,6 +168,18 @@ public class BlackScreen2 extends JPanel implements MouseListener, MouseMotionLi
 	    else {
 		RectBullets.remove(b);
 		System.out.println(RectBullets.size());
+	    }
+	}
+	*/
+	Iterator<RectBullet> itr = RectBullets.iterator();
+	while (itr.hasNext()) {
+	    RectBullet b = itr.next();
+	    if ( (currentTime - b.getSpawntime()) < b.getLifespan() ) { //valid
+		b.spawn(g);
+	    }
+	    else {
+		itr.remove();
+		//System.out.println(RectBullets.size());
 	    }
 	}
 
