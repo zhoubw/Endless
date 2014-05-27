@@ -1,47 +1,128 @@
-import java.io.*;
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.Timer;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.*;
-import java.awt.Color;
+import javax.swing.*;
+import java.util.List;
+import java.util.ArrayList;
 
-public class Player extends JPanel {
-    //workaround: follow mouse
-    protected int x_cor;
-    protected int y_cor;
-    protected int speed;
-    protected int dx = 0;
-    protected int dy = 0;
-    private int width;
-    private int height;
-    private Color color;
+public class Player {
+    protected int hp;
+    protected double x,y,spd;
+    protected double gravity;
+    protected double lastJump, lastShot;
+    protected boolean left,right,jumping,shooting;
+    protected boolean facingLeft,facingRight;
+    //protected List<Projectile> projectiles = new ArrayList<Projectile>();
+    protected ImageIcon ii_standLeft,ii_standRight,ii_runLeft,ii_runRight;
+    protected Image image_standLeft,image_standRight,image_runLeft,image_runRight;
     
     public Player() {
-	this.setVisible(true);
+	ii_standLeft = new ImageIcon("Megaman_Stand_Left.gif");
+	image_standLeft = ii_standLeft.getImage();
+	ii_standRight = new ImageIcon("Megaman_Stand_Right.gif");
+	image_standRight = ii_standRight.getImage();
+	ii_runLeft = new ImageIcon("Megaman_Run_Left.gif");
+	image_runLeft = ii_runLeft.getImage();
+	ii_runRight = new ImageIcon("Megaman_Run_Right.gif");
+	image_runRight = ii_runRight.getImage();
+
+	hp= 100;
+	x= 512;
+	y= 568;
+	lastJump= 0.0;
+	lastShot= 0.0;
+	left=false;right=false;
+	jumping=false;shooting=false;
+	facingRight=true;facingLeft=false; //default right
+	spd=5.0;
     }
 
-    public Player(int x_cor, int y_cor, int speed, int width, int height, Color color) {
-	this.x_cor = x_cor;
-	this.y_cor = y_cor;
-	this.speed = speed;
-	this.width = width;
-	this.height = height;
-	this.color = color;
+    public void move() {
+	if (y < 568) {
+	    y += gravity;
+	}
+	if (y >= 568) {
+	    y = 568;
+	}
+
+	if (left && x>0) {
+	    x-=spd;
+	}
+	if (right && x<1024) {
+	    x+=spd;
+	}
+	/*jumping. edit.
+	if (jumping && isStanding && time-lastShot > 1.0) {
+	    y -= gravity*2;
+	    isStanding = false;
+	    lastJump=time;
+	}
+	*/
     }
 
-    public Color getColor() {
-	return color;
+    public void jump(double time) {
+	if (!jumping) {
+	    lastJump = time;
+	}
+	else {
+	    if (time - lastJump < 1.5) {
+		y-= (gravity*2);
+	    }
+	    else {
+		jumping=false;
+		lastJump = time;
+	    }
+	}
     }
 
-    public int getWidth() {
-	return width;
+    //size is doubled in paint so nothing is halved
+    public int getDXStand() {
+	return ii_standLeft.getIconWidth();
     }
-
-    public int getHeight() {
-	return height;
+    public int getDYStand() {
+	return ii_standLeft.getIconHeight();
     }
+    public int getDXRun() {
+	return ii_runLeft.getIconWidth();
+    }
+    public int getDYRun() {
+	return ii_runLeft.getIconHeight();
+    }
+    
 
-}
+    public void keyPressed(KeyEvent e) {
+	int key = e.getKeyCode();
+	if (key == KeyEvent.VK_LEFT){
+            left=true;
+	    facingLeft=true;
+	    right=false;
+	    facingRight=false;
+        }
+	if (key == KeyEvent.VK_RIGHT){
+            right=true;
+	    facingRight=true;
+	    left=false;
+	    facingLeft=false;
+	}
+	if (key == KeyEvent.VK_Z){
+	    shooting=true;
+	}
+	//edit.
+	if (key == KeyEvent.VK_SHIFT){
+	    if (!jumping) {
+		jumping=true;
+	    }
+	}
+    }
+    public void keyReleased(KeyEvent e) {
+	int key = e.getKeyCode();
+        if (key == KeyEvent.VK_LEFT){
+            left=false;
+        }
+        if (key == KeyEvent.VK_RIGHT){
+            right=false;
+        }
+	if (key == KeyEvent.VK_Z){
+	    shooting=false;
+	}
+    }
+}//end class Player
