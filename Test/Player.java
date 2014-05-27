@@ -34,6 +34,7 @@ public class Player {
 	jumping=false;shooting=false;
 	facingRight=true;facingLeft=false; //default right
 	spd=5.0;
+	gravity=15.0;
     }
 
     public void move() {
@@ -64,12 +65,11 @@ public class Player {
 	    lastJump = time;
 	}
 	else {
-	    if (time - lastJump < 1.5) {
+	    if (time - lastJump < 0.2) {
 		y-= (gravity*2);
 	    }
 	    else {
 		jumping=false;
-		lastJump = time;
 	    }
 	}
     }
@@ -108,9 +108,8 @@ public class Player {
 	}
 	//edit.
 	if (key == KeyEvent.VK_SHIFT){
-	    if (!jumping) {
+	    if (y >=568) //fix this later
 		jumping=true;
-	    }
 	}
     }
     public void keyReleased(KeyEvent e) {
