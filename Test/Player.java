@@ -14,6 +14,7 @@ public class Player {
     //protected List<Projectile> projectiles = new ArrayList<Projectile>();
     protected ImageIcon ii_standLeft,ii_standRight,ii_runLeft,ii_runRight;
     protected Image image_standLeft,image_standRight,image_runLeft,image_runRight;
+    //default image
     
     public Player() {
 	ii_standLeft = new ImageIcon("Megaman_Stand_Left.gif");
@@ -41,7 +42,7 @@ public class Player {
 	if (y < 568) {
 	    y += gravity;
 	}
-	if (y >= 568) {
+	if (y > 568) {
 	    y = 568;
 	}
 

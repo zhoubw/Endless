@@ -9,19 +9,34 @@ import java.util.Scanner;
 import java.io.*;
 import javax.imageio.*;
 
-public class GameControl extends JPanel implements ActionListener{
-    protected Timer timer;
+/**
+ * GameControl
+ * Includes ActionListener, KeyAdapter
+ * action per frame and paintComponent
+ **/
 
+public class GameControl extends JPanel implements ActionListener{
+    //timer keeps track of fps and actionPerformed
+    protected Timer timer;
+    
+    //gameMode: playing or not; next for not playing
     protected boolean gameMode,next;
+    
+    //keeps track of time
     protected double time;
+
+    //Background of game
+    //to be used later
     protected ImageIcon background_ii,bgii;
     protected Image background,bg;
     protected Font font;
     protected BufferedImage image;
 
+    //player is attached to game
     protected Player p;
 
     public GameControl(){
+	p = new Player();
 	gameMode=true;next=false;
 	
 	//background_ii = new ImageIcon("background.png");
@@ -29,11 +44,15 @@ public class GameControl extends JPanel implements ActionListener{
 	
 	//bgii = new ImageIcon("grid.gif");
 	//bg = bgii.getImage();
+
+	//Adds key listener
 	setFocusable(true);
 	addKeyListener(new TAdapter());
+
+	//Timer for game
 	timer = new Timer(20,this);
-	timer.start();
 	time = 0;
+	timer.start();
 	/**
 	 * Font
 	 *
@@ -51,10 +70,9 @@ public class GameControl extends JPanel implements ActionListener{
 	}
 	*/
 
-	p = new Player();
-
     }
     
+    //handles actions performed per frame
     public void actionPerformed(ActionEvent e) {
 	if (gameMode){
 	    p.move();
@@ -67,6 +85,7 @@ public class GameControl extends JPanel implements ActionListener{
 	//System.out.println(time);
     }
 
+    //handles printing
     public void paintComponent(Graphics g) {
 	super.paintComponent(g);
 	g.setColor(Color.BLACK);
