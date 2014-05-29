@@ -5,18 +5,22 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Player {
+    protected int size_mult = 2;
     protected int hp;
-    protected double x,y,spd;
+    protected double x,y,spd,jumpSpd;
     protected double gravity;
+    protected double g; //acceleration of gravity
+    protected double airTime;
     protected double lastJump, lastShot;
     protected boolean left,right,jumping,shooting;
     protected boolean facingLeft,facingRight;
     //protected List<Projectile> projectiles = new ArrayList<Projectile>();
     protected ImageIcon ii_standLeft,ii_standRight,ii_runLeft,ii_runRight;
     protected Image image_standLeft,image_standRight,image_runLeft,image_runRight;
-    //default image
     
     public Player() {
+
+	//images
 	ii_standLeft = new ImageIcon("Megaman_Stand_Left.gif");
 	image_standLeft = ii_standLeft.getImage();
 	ii_standRight = new ImageIcon("Megaman_Stand_Right.gif");
@@ -29,19 +33,31 @@ public class Player {
 	hp= 100;
 	x= 512;
 	y= 568;
+	airTime = 0.0;
 	lastJump= 0.0;
 	lastShot= 0.0;
 	left=false;right=false;
 	jumping=false;shooting=false;
 	facingRight=true;facingLeft=false; //default right
 	spd=5.0;
-	gravity=15.0;
+	jumpSpd=0.0;
+	g=32;
+	gravity=0;
     }
 
     public void move() {
-	if (y < 568) {
-	    y += gravity;
-	}
+	if (y < 568) 
+	    airTime += 0.02;
+	else
+	    airTime = 0;
+	gravity = 0.5 * g * (airTime*airTime);
+	
+	System.out.println(gravity);
+	if (jumping) 
+	    y -= jumpSpd * airTime;
+	y += gravity;
+
+
 	if (y > 568) {
 	    y = 568;
 	}
@@ -67,7 +83,8 @@ public class Player {
 	}
 	else {
 	    if (time - lastJump < 0.2) {
-		y-= (gravity*2);
+		jumpSpd = 20.0;
+		airTime += 0.02;
 	    }
 	    else {
 		jumping=false;

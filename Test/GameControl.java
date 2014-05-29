@@ -96,23 +96,23 @@ public class GameControl extends JPanel implements ActionListener{
 	    if (p.right) { //fix direction later
 		g2d.drawImage(p.image_runRight,
 			  (int)(p.x-p.getDXRun()),(int)(p.y-p.getDYRun()),
-			  52,64,this);
+			      p.ii_runRight.getWidth()*p.size_mult,p.ii_runRight.getWidth()*p.size_mult,this);
 	    }
 	    else if (p.left) {
 		g2d.drawImage(p.image_runLeft,
-			  (int)(p.x-p.getDXRun()),(int)(p.y-p.getDYRun()),
-			  52,64,this);
+			      (int)(p.x-p.getDXRun()),(int)(p.y-p.getDYRun()),
+			      p.ii_runLeft.getWidth()*size_mult,p.ii_runLeft.getHeight()*size_mult,this);
 	    }
 	    else{
 		if (p.facingRight) {
 		    g2d.drawImage(p.image_standRight,
 				  (int)(p.x-p.getDXStand()),(int)(p.y-p.getDYStand()),
-				  46,64,this);
+				  p.image_standRight.getWidth()*size_mult,p.image_standRight.getHeight()*size_mult,this);
 		}
 		else {
 		    g2d.drawImage(p.image_standLeft,
 				  (int)(p.x-p.getDXStand()),(int)(p.y-p.getDYStand()),
-				  46,64,this);
+				  p.image_standLeft.getWidth()*size_mult,p.image_standLeft.getHeight(),this);
 		}
 	    }
 	}

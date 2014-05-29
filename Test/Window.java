@@ -17,7 +17,7 @@ public class Window extends JFrame{
     //Constructor
     public Window(){
 	//Window width and height
-	int width = 1024, height = 768;
+	int width = 1040, height = 768;
 	//TO DO: make a panel in TITLE MODE
 	///////////////////////////////////
 	//panel in GAME MODE.
