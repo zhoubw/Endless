@@ -12,12 +12,15 @@ public class Player {
     protected double g; //acceleration of gravity
     protected double airTime;
     protected double lastJump, lastShot;
-    protected boolean left,right,jumping,shooting;
+    protected boolean left,right,standing,jumping,shooting;
     protected boolean facingLeft,facingRight;
     //protected List<Projectile> projectiles = new ArrayList<Projectile>();
     protected ImageIcon ii_standLeft,ii_standRight,ii_runLeft,ii_runRight;
     protected Image image_standLeft,image_standRight,image_runLeft,image_runRight;
     
+    //Image to blit. Default: image_standRight
+    protected Image currentImage;
+
     public Player() {
 
 	//images
@@ -30,6 +33,9 @@ public class Player {
 	ii_runRight = new ImageIcon("Megaman_Run_Right.gif");
 	image_runRight = ii_runRight.getImage();
 
+	//default
+	currentImage = image_standRight;
+
 	hp= 100;
 	x= 512;
 	y= 568;
@@ -37,8 +43,13 @@ public class Player {
 	lastJump= 0.0;
 	lastShot= 0.0;
 	left=false;right=false;
-	jumping=false;shooting=false;
+	
+	//defaults
+	standing=true;
+	jumping=false;
+	shooting=false;
 	facingRight=true;facingLeft=false; //default right
+	
 	spd=5.0;
 	jumpSpd=0.0;
 	g=32;
@@ -46,13 +57,25 @@ public class Player {
     }
 
     public void move() {
+	//check if standing; default y=568
+	if (y >= 568 && !left && !right) {
+	    standing = true;
+	    if (facingLeft) {
+		currentImage = image_standLeft;
+
+	    }
+	    if (facingRight) {
+		currentImage = image_standRight;
+	    }	
+	}
+	
 	if (y < 568) 
 	    airTime += 0.02;
 	else
 	    airTime = 0;
 	gravity = 0.5 * g * (airTime*airTime);
 	
-	System.out.println(gravity);
+	//System.out.println(gravity);
 	if (jumping) 
 	    y -= jumpSpd * airTime;
 	y += gravity;
@@ -110,16 +133,26 @@ public class Player {
     public void keyPressed(KeyEvent e) {
 	int key = e.getKeyCode();
 	if (key == KeyEvent.VK_LEFT){
+	    standing=false;
             left=true;
 	    facingLeft=true;
 	    right=false;
 	    facingRight=false;
+	    //if (jumping){if (shooting)}
+	    //else if (shooting)
+	    //else
+	    currentImage = image_runLeft;
         }
 	if (key == KeyEvent.VK_RIGHT){
+	    standing=false;
             right=true;
 	    facingRight=true;
 	    left=false;
 	    facingLeft=false;
+	    //if (jumping){if (shooting)}
+	    //else if (shooting)
+	    //else
+	    currentImage = image_runRight;
 	}
 	if (key == KeyEvent.VK_Z){
 	    shooting=true;
@@ -134,10 +167,11 @@ public class Player {
 	int key = e.getKeyCode();
         if (key == KeyEvent.VK_LEFT){
             left=false;
+	    //if not in air, standing = true
         }
         if (key == KeyEvent.VK_RIGHT){
             right=false;
-        }
+	}
 	if (key == KeyEvent.VK_Z){
 	    shooting=false;
 	}

@@ -93,7 +93,7 @@ public class GameControl extends JPanel implements ActionListener{
 	Graphics2D g2d = (Graphics2D)g;
 	
 	//left or right key is pressed
-	if (p.left || p.right) {
+	if (!p.standing) {
 	    g2d.drawImage(p.currentImage,
 			  (int)(p.x-p.getDXRun()),
 			  (int)(p.y-p.getDYRun()),
