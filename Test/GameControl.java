@@ -93,18 +93,28 @@ public class GameControl extends JPanel implements ActionListener{
 	Graphics2D g2d = (Graphics2D)g;
 	
 	//left or right key is pressed
-	if (p.left || p.right) {
-	    g2d.drawImage(p.currentImage,
-			  (int)(p.x-p.getDXRun()),
-			  (int)(p.y-p.getDYRun()),
-			  p.ii_runLeft.getIconWidth() * p.size_mult,
-			  p.ii_runRight.getIconHeight()* p.size_mult,
-			  this);
+	if (p.landing) {
+	    if (p.left || p.right) {
+		g2d.drawImage(p.currentImage,
+			      (int)(p.x-p.getDXRun()),
+			      (int)(p.y-p.getDYRun()),
+			      p.ii_runLeft.getIconWidth() * p.size_mult,
+			      p.ii_runRight.getIconHeight()* p.size_mult,
+			      this);
+	    }
+	    else {
+		g2d.drawImage(p.currentImage,
+			      (int)(p.x-p.getDXStand()),
+			      (int)(p.y-p.getDYStand()),
+			      p.ii_standLeft.getIconWidth() * p.size_mult,
+			      p.ii_standRight.getIconHeight()* p.size_mult,
+			      this);
+	    }
 	}
-	else {
-	    g2d.drawImage(p.currentImage,
-			  (int)(p.x-p.getDXStand()),
-			  (int)(p.y-p.getDYStand()),
+	else { //fix later
+	    g2d.drawImage(p.currentImage, 
+			  (int)(p.x-p.getDXAir()),
+			  (int)(p.y-p.getDYAir()),
 			  p.ii_standLeft.getIconWidth() * p.size_mult,
 			  p.ii_standRight.getIconHeight()* p.size_mult,
 			  this);

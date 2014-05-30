@@ -15,8 +15,8 @@ public class Player {
     protected boolean left,right,landing,jumping,shooting;
     protected boolean facingLeft,facingRight;
     //protected List<Projectile> projectiles = new ArrayList<Projectile>();
-    protected ImageIcon ii_standLeft,ii_standRight,ii_runLeft,ii_runRight;
-    protected Image image_standLeft,image_standRight,image_runLeft,image_runRight;
+    protected ImageIcon ii_standLeft,ii_standRight,ii_runLeft,ii_runRight,ii_airLeft,ii_airRight;
+    protected Image image_standLeft,image_standRight,image_runLeft,image_runRight,image_airLeft,image_airRight;
     
     //Image to blit. Default: image_standRight
     protected Image currentImage;
@@ -32,6 +32,10 @@ public class Player {
 	image_runLeft = ii_runLeft.getImage();
 	ii_runRight = new ImageIcon("Megaman_Run_Right.gif");
 	image_runRight = ii_runRight.getImage();
+	ii_airLeft = new ImageIcon("Megaman_Air_Left.png");
+	image_airLeft = ii_airLeft.getImage();
+	ii_airRight = new ImageIcon("Megaman_Air_Right.png");
+	image_airRight = ii_airRight.getImage();
 
 	//default
 	currentImage = image_standRight;
@@ -59,8 +63,16 @@ public class Player {
 
     public void move() {
 	//check if standing; default y=568
-	if (y < 568)
+	if (y < 568){
 	    landing = false;
+	    if (facingLeft) {
+		currentImage = image_airLeft;
+		    
+	    }
+	    if (facingRight) {
+		currentImage = image_airRight;
+	    }
+	}
 	if (y >= 568) {
 	    landing = true;
 	    if (!left && !right) {
@@ -100,6 +112,10 @@ public class Player {
 	
     }
 
+    /**
+     * For some reason, holding shift will not continuously jump
+     **/
+
     public void jump(double time) {
 	if (!jumping) {
 	    lastJump = time;
@@ -128,6 +144,12 @@ public class Player {
     public int getDYRun() {
 	return ii_runLeft.getIconHeight();
     }
+    public int getDXAir() {
+	return ii_airLeft.getIconHeight();
+    }
+    public int getDYAir() {
+	return ii_airRight.getIconHeight();
+    }
     
 
     public void keyPressed(KeyEvent e) {
@@ -140,8 +162,11 @@ public class Player {
 	    //if (jumping){if (shooting)}
 	    //else if (shooting)
 	    //else
-	    currentImage = image_runLeft;
-        }
+	    if (landing)
+		currentImage = image_runLeft;
+	    else
+		currentImage = image_airLeft;
+	}
 	if (key == KeyEvent.VK_RIGHT){
             right=true;
 	    facingRight=true;
@@ -150,7 +175,10 @@ public class Player {
 	    //if (jumping){if (shooting)}
 	    //else if (shooting)
 	    //else
-	    currentImage = image_runRight;
+	    if (landing)
+		currentImage = image_runRight;
+	    else
+		currentImage = image_airRight;
 	}
 	if (key == KeyEvent.VK_Z){
 	    shooting=true;
