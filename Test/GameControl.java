@@ -75,8 +75,8 @@ public class GameControl extends JPanel implements ActionListener{
     //handles actions performed per frame
     public void actionPerformed(ActionEvent e) {
 	if (gameMode){
-	    p.move();
 	    p.jump(time);
+	    p.move();
 	    //if (c.shooting)
 		//c.shoot(time);
 	}

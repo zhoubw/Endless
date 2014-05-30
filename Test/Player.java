@@ -12,7 +12,7 @@ public class Player {
     protected double g; //acceleration of gravity
     protected double airTime;
     protected double lastJump, lastShot;
-    protected boolean left,right,standing,jumping,shooting;
+    protected boolean left,right,landing,jumping,shooting;
     protected boolean facingLeft,facingRight;
     //protected List<Projectile> projectiles = new ArrayList<Projectile>();
     protected ImageIcon ii_standLeft,ii_standRight,ii_runLeft,ii_runRight;
@@ -38,49 +38,49 @@ public class Player {
 
 	hp= 100;
 	x= 512;
-	y= 568;
+	//raise Megaman so I can check gravity...
+	y= 468;
 	airTime = 0.0;
 	lastJump= 0.0;
 	lastShot= 0.0;
 	left=false;right=false;
 	
 	//defaults
-	standing=true;
+	landing=false; //testing
 	jumping=false;
 	shooting=false;
 	facingRight=true;facingLeft=false; //default right
 	
 	spd=5.0;
 	jumpSpd=0.0;
-	g=32;
+	g=80;
 	gravity=0;
     }
 
     public void move() {
 	//check if standing; default y=568
-	if (y >= 568 && !left && !right) {
-	    standing = true;
-	    if (facingLeft) {
-		currentImage = image_standLeft;
-
+	if (y < 568)
+	    landing = false;
+	if (y >= 568) {
+	    landing = true;
+	    if (!left && !right) {
+		if (facingLeft) {
+		    currentImage = image_standLeft;
+		    
+		}
+		if (facingRight) {
+		    currentImage = image_standRight;
+		}	
 	    }
-	    if (facingRight) {
-		currentImage = image_standRight;
-	    }	
 	}
 	
-	if (y < 568) 
-	    airTime += 0.02;
-	else
-	    airTime = 0;
-	gravity = 0.5 * g * (airTime*airTime);
+	//vertical motion
+	gravity = (0.5 * g * (airTime*airTime));
 	
-	//System.out.println(gravity);
-	if (jumping) 
-	    y -= jumpSpd * airTime;
+        y -= jumpSpd * airTime;
 	y += gravity;
 
-
+	//prevent falling into the floor
 	if (y > 568) {
 	    y = 568;
 	}
@@ -91,29 +91,29 @@ public class Player {
 	if (right && x<1024) {
 	    x+=spd;
 	}
-	/*jumping. edit.
-	if (jumping && isStanding && time-lastShot > 1.0) {
-	    y -= gravity*2;
-	    isStanding = false;
-	    lastJump=time;
-	}
-	*/
+
+	//check if in air
+	if (y < 568) 
+	    airTime += 0.02;
+	if (landing) 
+	    airTime = 0;
+	
     }
 
     public void jump(double time) {
 	if (!jumping) {
 	    lastJump = time;
+	    System.out.println(time);
 	}
 	else {
-	    if (time - lastJump < 0.2) {
-		jumpSpd = 20.0;
-		airTime += 0.02;
-	    }
-	    else {
-		jumping=false;
-	    }
+	    jumpSpd = 30.0;
+	    airTime += 0.02;
+	}
+	if (time-lastJump > 0.2) {
+	    jumping = false;
 	}
     }
+
 
     //size is doubled in paint so nothing is halved
     public int getDXStand() {
@@ -133,7 +133,6 @@ public class Player {
     public void keyPressed(KeyEvent e) {
 	int key = e.getKeyCode();
 	if (key == KeyEvent.VK_LEFT){
-	    standing=false;
             left=true;
 	    facingLeft=true;
 	    right=false;
@@ -144,7 +143,6 @@ public class Player {
 	    currentImage = image_runLeft;
         }
 	if (key == KeyEvent.VK_RIGHT){
-	    standing=false;
             right=true;
 	    facingRight=true;
 	    left=false;
@@ -159,8 +157,9 @@ public class Player {
 	}
 	//edit.
 	if (key == KeyEvent.VK_SHIFT){
-	    if (y >=568) //fix this later
+	    if (y>=568) {//fix this later
 		jumping=true;
+	    }
 	}
     }
     public void keyReleased(KeyEvent e) {
