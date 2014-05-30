@@ -57,7 +57,7 @@ public class Player {
 	
 	spd=5.0;
 	jumpSpd=0.0;
-	g=80;
+	g=135;
 	gravity=0;
     }
 
@@ -122,7 +122,7 @@ public class Player {
 	    System.out.println(time);
 	}
 	else {
-	    jumpSpd = 30.0;
+	    jumpSpd = 50.0;
 	    airTime += 0.02;
 	}
 	if (time-lastJump > 0.2) {
