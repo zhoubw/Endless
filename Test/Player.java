@@ -57,7 +57,7 @@ public class Player {
 	
 	spd=5.0;
 	jumpSpd=0.0;
-	g=135;
+	g=320;
 	gravity=0;
     }
 
@@ -119,14 +119,14 @@ public class Player {
     public void jump(double time) {
 	if (!jumping) {
 	    lastJump = time;
-	    System.out.println(time);
 	}
 	else {
-	    jumpSpd = 50.0;
+	    jumpSpd = 75.0;
 	    airTime += 0.02;
 	}
-	if (time-lastJump > 0.2) {
+	if (landing) {
 	    jumping = false;
+	    System.out.println("reset jump");
 	}
     }
 
